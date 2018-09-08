@@ -10,7 +10,8 @@ https://github.com/sparkfun/SparkFun_LSM6DS3_Arduino_Library
 Resources:
 Uses Wire.h for i2c operation
 Uses SPI.h for SPI operation
-Either can be omitted if not used
+SPI mode removed in ReliaSolve fork because it was incompatible with
+SPI.h found when loaded.
 
 Development environment specifics:
 Arduino IDE 1.6.4

@@ -10,7 +10,8 @@ https://github.com/sparkfun/SparkFun_LSM6DS3_Arduino_Library
 Resources:
 Uses Wire.h for i2c operation
 Uses SPI.h for SPI operation
-Either can be omitted if not used
+SPI mode removed in ReliaSolve fork because it was incompatible with
+SPI.h found when loaded.
 
 Development environment specifics:
 Arduino IDE 1.6.4
@@ -30,7 +31,6 @@ Distributed as-is; no warranty is given.
 #include "stdint.h"
 
 #include "Wire.h"
-#include "SPI.h"
 
 //****************************************************************************//
 //
@@ -72,6 +72,7 @@ status_t LSM6DS3Core::beginCore(void)
 		Wire.begin();
 		break;
 
+#if 0
 	case SPI_MODE:
 		// start the SPI library:
 		SPI.begin();
@@ -98,6 +99,9 @@ status_t LSM6DS3Core::beginCore(void)
 		pinMode(chipSelectPin, OUTPUT);
 		digitalWrite(chipSelectPin, HIGH);
 		break;
+#else
+                returnError = IMU_HW_ERROR;
+#endif
 	default:
 		break;
 	}
@@ -169,7 +173,8 @@ status_t LSM6DS3Core::readRegisterRegion(uint8_t *outputPointer , uint8_t offset
 		}
 		break;
 
-	case SPI_MODE:
+#if 0
+        case SPI_MODE:
 		// take the chip select low to select the device:
 		digitalWrite(chipSelectPin, LOW);
 		// send the device the register you want to read:
@@ -194,6 +199,7 @@ status_t LSM6DS3Core::readRegisterRegion(uint8_t *outputPointer , uint8_t offset
 		// take the chip select high to de-select:
 		digitalWrite(chipSelectPin, HIGH);
 		break;
+#endif
 
 	default:
 		break;
@@ -232,7 +238,7 @@ status_t LSM6DS3Core::readRegister(uint8_t* outputPointer, uint8_t offset) {
 			result = Wire.read(); // receive a byte as a proper uint8_t
 		}
 		break;
-
+#if 0
 	case SPI_MODE:
 		// take the chip select low to select the device:
 		digitalWrite(chipSelectPin, LOW);
@@ -249,6 +255,7 @@ status_t LSM6DS3Core::readRegister(uint8_t* outputPointer, uint8_t offset) {
 			returnError = IMU_ALL_ONES_WARNING;
 		}
 		break;
+#endif
 
 	default:
 		break;
@@ -299,7 +306,7 @@ status_t LSM6DS3Core::writeRegister(uint8_t offset, uint8_t dataToWrite) {
 			returnError = IMU_HW_ERROR;
 		}
 		break;
-
+#if 0
 	case SPI_MODE:
 		// take the chip select low to select the device:
 		digitalWrite(chipSelectPin, LOW);
@@ -313,7 +320,7 @@ status_t LSM6DS3Core::writeRegister(uint8_t offset, uint8_t dataToWrite) {
 		break;
 		
 		//No way to check error on this write (Except to read back but that's not reliable)
-
+#endif
 	default:
 		break;
 	}
